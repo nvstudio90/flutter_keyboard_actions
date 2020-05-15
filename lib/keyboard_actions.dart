@@ -59,6 +59,7 @@ class KeyboardActions extends StatefulWidget {
   final bool tapOutsideToDismiss;
 
   final OnInterceptTouchOutside interceptTouchOutside;
+  final VoidCallback onActionWidgetShowed;
 
   /// If you want to add overscroll. Eg: In some cases you have a [TextField] with an error text below that.
   final double overscroll;
@@ -70,6 +71,7 @@ class KeyboardActions extends StatefulWidget {
     this.isDialog = false,
     this.tapOutsideToDismiss = false,
     this.interceptTouchOutside,
+    this.onActionWidgetShowed,
     @required this.config,
     this.overscroll = 12.0,
   }) : assert(child != null && config != null);
@@ -224,8 +226,10 @@ class KeyboardActionstate extends State<KeyboardActions>
   /// Called every time the focus changes, and when the app is resumed on Android.
   _focusChanged(bool showBar) {
     if (_isAvailable) {
+      bool overlayAvailable = false;
       if (showBar && !_isShowing) {
         _insertOverlay();
+        overlayAvailable = true;
       } else if (!showBar && _isShowing) {
         _removeOverlay();
       } else if (showBar && _isShowing) {
@@ -235,6 +239,13 @@ class KeyboardActionstate extends State<KeyboardActions>
       if (_currentAction != null && _currentAction.footerBuilder != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _updateOffset();
+        });
+      }
+      if(overlayAvailable) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if(widget.onActionWidgetShowed != null) {
+            widget.onActionWidgetShowed();
+          }
         });
       }
     }
