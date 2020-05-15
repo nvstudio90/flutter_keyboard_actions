@@ -1,5 +1,5 @@
 // Created by Ngoclv on 5/15/2020 14:59
-// Copyright © 2020 VinID
+// Copyright © 2020 NVStudio
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
