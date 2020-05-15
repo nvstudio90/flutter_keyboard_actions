@@ -1,16 +1,22 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/external/bottom_area_avoider.dart';
+import 'package:keyboard_actions/interceptor_widget.dart';
+
 import 'keyboard_action.dart';
-export 'keyboard_action.dart';
 import 'keyboard_actions_config.dart';
+
+export 'keyboard_action.dart';
 export 'keyboard_actions_config.dart';
 export 'keyboard_custom.dart';
 
 const double _kBarSize = 45.0;
 const Duration _timeToDismiss = Duration(milliseconds: 110);
+
+typedef OnInterceptTouchOutside = bool Function(PointerDownEvent, Size);
 
 enum KeyboardActionsPlatform {
   ANDROID,
@@ -52,6 +58,8 @@ class KeyboardActions extends StatefulWidget {
   /// Tap outside the keyboard will dismiss this
   final bool tapOutsideToDismiss;
 
+  final OnInterceptTouchOutside interceptTouchOutside;
+
   /// If you want to add overscroll. Eg: In some cases you have a [TextField] with an error text below that.
   final double overscroll;
 
@@ -61,6 +69,7 @@ class KeyboardActions extends StatefulWidget {
     this.autoScroll = true,
     this.isDialog = false,
     this.tapOutsideToDismiss = false,
+    this.interceptTouchOutside,
     @required this.config,
     this.overscroll = 12.0,
   }) : assert(child != null && config != null);
@@ -283,13 +292,7 @@ class KeyboardActionstate extends State<KeyboardActions>
           mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.tapOutsideToDismiss)
-              GestureDetector(
-                onTap: _clearFocus,
-                child: Container(
-                  color: Colors.transparent,
-                  height: queryData.size.height,
-                ),
-              ),
+              _buildOutsideChild(width: queryData.size.width, height: queryData.size.height),
             Material(
               color: config.keyboardBarColor ?? Colors.grey[200],
               elevation: 20,
@@ -313,6 +316,26 @@ class KeyboardActionstate extends State<KeyboardActions>
       );
     });
     os.insert(_overlayEntry);
+  }
+
+  Widget _buildOutsideChild({double width, double height}) {
+    if(widget.interceptTouchOutside != null) {
+      return InterceptorWidget(
+           width: width,
+           height: height,
+           onTap: _clearFocus,
+           pointerAllowed: (e) {
+             return widget.interceptTouchOutside(e, Size(width, height));
+           },
+      );
+    }
+    return GestureDetector(
+      onTap: _clearFocus,
+      child: Container(
+        color: Colors.transparent,
+        height: height,
+      ),
+    );
   }
 
   /// Remove the overlay bar. Call when losing focus or being dismissed.
