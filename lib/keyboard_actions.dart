@@ -402,7 +402,7 @@ class KeyboardActionstate extends State<KeyboardActions>
 
   void _onLayout() {
     if (widget.isDialog) {
-      final render = _keyParent.currentContext.findRenderObject() as RenderBox;
+      final render = _keyParent.currentContext?.findRenderObject() as RenderBox;
       if(render == null) return;
       final fullHeight = MediaQuery.of(context).size.height;
       final localHeight = render.size.height;
