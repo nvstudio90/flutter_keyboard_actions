@@ -404,7 +404,8 @@ class KeyboardActionstate extends State<KeyboardActions>
     if (widget.isDialog) {
       final render = _keyParent.currentContext?.findRenderObject() as RenderBox;
       if(render == null) return;
-      final fullHeight = MediaQuery.of(context).size.height;
+      final fullHeight = MediaQuery.of(context)?.size?.height;
+      if(fullHeight == null) return;
       final localHeight = render.size.height;
       _localMargin = (fullHeight - localHeight) / 2;
     }
