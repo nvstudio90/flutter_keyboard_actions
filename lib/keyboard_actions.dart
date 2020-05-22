@@ -403,6 +403,7 @@ class KeyboardActionstate extends State<KeyboardActions>
 
   void _onLayout() {
     if (widget.isDialog) {
+      _localMargin = 0;
       final render = _keyParent.currentContext?.findRenderObject() as RenderBox;
       if(render == null) return;
       final fullHeight = MediaQuery.of(context)?.size?.height;
@@ -445,7 +446,7 @@ class KeyboardActionstate extends State<KeyboardActions>
     super.initState();
     if (widget.enable) {
       setConfig(widget.config);
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _onLayout();
         _updateOffset();
       });
