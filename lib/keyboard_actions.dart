@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:keyboard_actions/external/bottom_area_avoider.dart';
 import 'package:keyboard_actions/interceptor_widget.dart';
 
@@ -441,14 +442,14 @@ class KeyboardActionstate extends State<KeyboardActions>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    super.initState();
     if (widget.enable) {
       setConfig(widget.config);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         _onLayout();
         _updateOffset();
       });
     }
-    super.initState();
   }
 
   var isKeyboardOpen = false;
