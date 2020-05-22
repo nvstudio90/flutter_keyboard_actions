@@ -406,8 +406,10 @@ class KeyboardActionstate extends State<KeyboardActions>
       if(render == null) return;
       final fullHeight = MediaQuery.of(context)?.size?.height;
       if(fullHeight == null) return;
-      final localHeight = render.size.height;
-      _localMargin = (fullHeight - localHeight) / 2;
+      final localHeight = render.size?.height;
+      if(localHeight != null) {
+        _localMargin = (fullHeight - localHeight) / 2;
+      }
     }
   }
 
