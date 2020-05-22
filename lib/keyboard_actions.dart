@@ -64,6 +64,7 @@ class KeyboardActions extends StatefulWidget {
 
   /// If you want to add overscroll. Eg: In some cases you have a [TextField] with an error text below that.
   final double overscroll;
+  final bool bottomAreaAvoider;
 
   const KeyboardActions({
     this.child,
@@ -73,6 +74,7 @@ class KeyboardActions extends StatefulWidget {
     this.tapOutsideToDismiss = false,
     this.interceptTouchOutside,
     this.onActionWidgetShowed,
+    this.bottomAreaAvoider = true,
     @required this.config,
     this.overscroll = 12.0,
   }) : assert(child != null && config != null);
@@ -563,7 +565,7 @@ class KeyboardActionstate extends State<KeyboardActions>
             child: SizedBox(
               width: double.maxFinite,
               key: _keyParent,
-              child: BottomAreaAvoider(
+              child: widget.bottomAreaAvoider ? BottomAreaAvoider(
                 key: bottomAreaAvoiderKey,
                 areaToAvoid: _offset,
                 overscroll: widget.overscroll,
@@ -572,7 +574,7 @@ class KeyboardActionstate extends State<KeyboardActions>
                         (_timeToDismiss.inMilliseconds * 1.8).toInt()),
                 autoScroll: widget.autoScroll,
                 child: widget.child,
-              ),
+              ): widget.child,
             ),
           )
         : widget.child;
