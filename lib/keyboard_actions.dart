@@ -244,13 +244,6 @@ class KeyboardActionstate extends State<KeyboardActions>
           _updateOffset();
         });
       }
-      if(overlayAvailable) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if(widget.onActionWidgetShowed != null) {
-            widget.onActionWidgetShowed();
-          }
-        });
-      }
     }
   }
 
@@ -298,8 +291,16 @@ class KeyboardActionstate extends State<KeyboardActions>
           ? _currentAction.footerBuilder(context)
           : null;
       final queryData = MediaQuery.of(context);
+      final bottom = queryData.viewInsets.bottom;
+      if(bottom > 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if(widget.onActionWidgetShowed != null) {
+            widget.onActionWidgetShowed();
+          }
+        });
+      }
       return Positioned(
-        bottom: queryData.viewInsets.bottom,
+        bottom: bottom,
         left: 0,
         right: 0,
         child: Column(
