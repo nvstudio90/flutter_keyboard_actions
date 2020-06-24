@@ -68,8 +68,7 @@ class BottomAreaAvoiderState extends State<BottomAreaAvoider> {
 
   @override
   void dispose() {
-    _animationKey.currentState?.animation
-        ?.removeStatusListener(_animationListener);
+    _animationKey.currentState?.animation?.removeStatusListener(_animationListener);
     super.dispose();
   }
 
@@ -80,8 +79,7 @@ class BottomAreaAvoiderState extends State<BottomAreaAvoider> {
     if (_animationListener == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _animationListener = _paddingAnimationStatusChanged;
-        _animationKey.currentState.animation
-            .addStatusListener(_animationListener);
+        _animationKey.currentState?.animation?.addStatusListener(_animationListener);
       });
     }
 
@@ -168,6 +166,7 @@ RenderObject findFocusedObject(RenderObject root) {
   while (q.isNotEmpty) {
     final node = q.removeFirst();
     final config = SemanticsConfiguration();
+    // ignore: invalid_use_of_protected_member
     node.describeSemanticsConfiguration(config);
     if (config.isFocused) {
       return node;
